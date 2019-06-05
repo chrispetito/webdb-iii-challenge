@@ -15,15 +15,18 @@ router.get("/", (req, res) => {
 });
 
 router.get("/:id", (req, res) => {
-  db.findById(req.params.id).then(cohort => {
-    res
-      .status(200)
-      .json(cohort)
+    db.findById(req.params.id)
+      .then(cohort => {
+        if (cohort) {
+          res.status(200).json(cohort);
+        } else {
+          res.status(404).json({ message: "Cohort not found" });
+        }
+      })
       .catch(err => {
         res.status(500).json(err);
       });
   });
-});
 
 router.get("/:id/students", (req, res) => {
   db.getCohortStudents(req.params.id)

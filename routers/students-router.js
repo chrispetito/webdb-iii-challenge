@@ -13,47 +13,62 @@ router.get("/", (req, res) => {
 });
 
 router.get("/:id", (req, res) => {
-    db.findById(req.params.id).then(student => {
-      res
-        .status(200)
-        .json(student)
-        .catch(err => {
-          res.status(500).json(err);
-        });
+  db.findById(req.params.id)
+    .then(student => {
+      if (student) {
+        res.status(200).json(student);
+      } else {
+        res.status(404).json({ message: "Student not found" });
+      }
+    })
+    .catch(err => {
+      res.status(500).json(err);
     });
-  });
+});
 
-  router.post("/", (req, res) => {
-    db.add(req.body)
-      .then(() => {
-        res
-          .status(201)
-          .json({ message: "You have successfully added a student!" });
-      })
-      .catch(err => {
-        res.status(500).json(err);
-      });
-  });
-  
-  router.put("/:id", (req, res) => {
-    db.update(req.params.id, req.body)
-      .then(() => {
+router.post("/", (req, res) => {
+  const { name } = req.body;
+  db.add(req.body)
+    .then(student => {
+      if (!name) {
+        res.status(404).json({ message: "The name field is required." });
+      } else {
+        res.status(201).json(student);
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ message: "Could not add student" });
+    });
+});
+
+router.put("/:id", (req, res) => {
+  db.findById(req.params.id);
+  db.update(req.params.id, req.body)
+    .then(student => {
+      if (student) {
         res.status(200).json({ message: "Succesfully updated." });
-      })
-      .catch(err => {
-        res.status(500).json(err);
-      });
-  });
-  
-  router.delete("/:id", (req, res) => {
-    db.remove(req.params.id)
-      .then(() => {
+      } else {
+        res.status(404).json({ message: "Student not found." });
+      }
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
+router.delete("/:id", (req, res) => {
+  db.findById(req.params.id);
+  db.remove(req.params.id)
+    .then(student => {
+      if (student) {
         res.status(200).json({ message: "Student successfully deleted." });
-      })
-      .catch(err => {
-        res.status(500).json(err);
-      });
-  });
-  
+      } else {
+        res.status(404).json({ message: "Student not found." });
+      }
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
 
 module.exports = router;
