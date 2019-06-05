@@ -25,38 +25,46 @@ router.get("/:id", (req, res) => {
   });
 });
 
-router.get('/:id/students', (req, res) => {
-    db.getCohortStudents(req.params.id).then(response => {
-        res.status(200).json(response)
-    }).catch(err => {
-        res.status(500).json(err)
+router.get("/:id/students", (req, res) => {
+  db.getCohortStudents(req.params.id)
+    .then(response => {
+      res.status(200).json(response);
     })
-})
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
 
-router.post('/', (req, res) => {
-    db.add(req.body).then(() => {
-        res.status(201).json({ message: 'You have successfully added a cohort!'})
-    }).catch(err => {
-        res.status(500).json(err);
-    })
-})
-
-router.put('/:id', (req, res) => {
-    db.update(req.params.id, req.body)
+router.post("/", (req, res) => {
+  db.add(req.body)
     .then(() => {
-        res.status(200).json({message: 'Succesfully updated.'})
-    }).catch(err => {
-        res.status(500).json(err);
+      res
+        .status(201)
+        .json({ message: "You have successfully added a cohort!" });
     })
-})
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
 
-router.delete('/:id', (req, res) => {
-    db.remove(req.params.id)
+router.put("/:id", (req, res) => {
+  db.update(req.params.id, req.body)
     .then(() => {
-        res.status(200).json({ message: 'Cohort successfully deleted.'})
-    }).catch(err => {
-        res.status(500).json(err)
+      res.status(200).json({ message: "Succesfully updated." });
     })
-})
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
+
+router.delete("/:id", (req, res) => {
+  db.remove(req.params.id)
+    .then(() => {
+      res.status(200).json({ message: "Cohort successfully deleted." });
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
 
 module.exports = router;
