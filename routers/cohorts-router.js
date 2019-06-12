@@ -82,7 +82,7 @@ router.delete("/:id", (req, res) => {
       if (cohort) {
         res.status(200).json({ message: "Cohort successfully deleted." });
       } else {
-        res.status(404).json({ message: "Cohort does not exist." });
+        res.status(404).json({ message: "Cohort not found" });
       }
     })
     .catch(err => {
